@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10251f">
+<meta name="description" content="TYT ve AYT günlük soru takip uygulaması. Çevrimdışı çalışır, kayıtlar cihazında kalır.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Soru Takip | TYT + AYT</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1512;--panel:#14221d;--panel2:#1b2d26;--text:#f1f7f3;--muted:#a8b8ae;--line:#2c4238;--green:#63e6a2;--green2:#1d8d60;--red:#ff8585;--yellow:#f3ce74}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#17352a 0,#0b1512 48%);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding-bottom:28px}
+header{padding:calc(18px + env(safe-area-inset-top)) 17px 16px;max-width:850px;margin:auto}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#7df0b4,#249667);display:grid;place-items:center;color:#062116;font-size:25px;font-weight:900;box-shadow:0 8px 28px #0004}
+h1{font-size:22px;margin:0;letter-spacing:-.5px}header p{margin:3px 0 0;color:var(--muted);font-size:13px}
+main{max-width:850px;margin:auto;padding:0 14px;display:grid;gap:14px}
+.panel{background:#14221deF;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 10px 32px #0002}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.row.start{justify-content:flex-start}
+h2{font-size:17px;margin:0 0 12px}h3{font-size:15px;margin:0}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+input,select,textarea,button{font:inherit}input,select,textarea{background:#0c1712;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 12px;min-width:0;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}input[type=number]{text-align:center;padding:10px 4px}
+.field{flex:1;min-width:125px}.date-goal{display:flex;gap:10px;align-items:end}.date-goal .field:first-child{flex:1.3}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.tab{border:1px solid var(--line);background:#0c1712;color:var(--muted);border-radius:14px;padding:12px;font-weight:750}.tab.active{background:var(--green);color:#082116;border-color:var(--green)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{background:var(--panel2);border-radius:15px;padding:12px 10px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:22px;display:block;margin-top:4px;letter-spacing:-.5px}.green{color:var(--green)}.red{color:var(--red)}
+.progress{height:9px;background:#07100c;border-radius:20px;overflow:hidden;margin:12px 0 7px}.progress span{height:100%;width:0;display:block;background:linear-gradient(90deg,#26a86f,#7df0b4);border-radius:20px;transition:width .2s}
+.subject-list{display:grid;gap:9px}.subject{border:1px solid var(--line);border-radius:16px;padding:12px;background:#102019}.subject-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.subject-head span{font-size:12px;color:var(--muted)}
+.inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.inputs label{text-align:center}.netline{font-size:12px;color:var(--muted);margin-top:8px}
+button{border:0;border-radius:13px;padding:12px 14px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:#092217}.secondary{background:#22362c;color:var(--text);border:1px solid var(--line)}.danger{background:#382020;color:#ffb6b6;border:1px solid #5a3030}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.muted{color:var(--muted);font-size:13px}.empty{padding:18px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.history-list{display:grid;gap:9px}.history-item{padding:12px;border-radius:15px;background:#102019;border:1px solid var(--line)}.history-item .date{font-weight:800}.pill{font-size:11px;padding:4px 8px;border-radius:99px;background:#1d4533;color:var(--green)}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.week-day{background:#102019;border:1px solid var(--line);border-radius:12px;text-align:center;padding:9px 2px}.week-day small{display:block;color:var(--muted);font-size:10px}.week-day strong{display:block;font-size:14px;margin-top:5px}
+footer{max-width:850px;margin:15px auto 0;padding:0 18px;color:var(--muted);font-size:11px;text-align:center}
+@media(max-width:430px){.stats{grid-template-columns:repeat(2,1fr)}.stat strong{font-size:24px}.date-goal{align-items:stretch;flex-direction:column}.field{width:100%}.panel{padding:14px}header{padding-left:16px;padding-right:16px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">✓</div><div><h1>Soru Takip</h1><p>TYT + AYT · Günlük hedefini takip et</p></div></div></header>
+<main>
+<section class="panel">
+ <div class="date-goal">
+  <div class="field"><label for="date">Çalışma tarihi</label><input id="date" type="date"></div>
+  <div class="field"><label for="goal">Günlük soru hedefi</label><input id="goal" type="number" min="0" step="1" value="150"></div>
+ </div>
+ <div style="margin-top:15px" class="stats">
+  <div class="stat"><small>Toplam soru</small><strong id="total">0</strong></div>
+  <div class="stat"><small>Toplam net</small><strong id="net" class="green">0,00</strong></div>
+  <div class="stat"><small>Doğru</small><strong id="correct" class="green">0</strong></div>
+  <div class="stat"><small>Yanlış</small><strong id="wrong" class="red">0</strong></div>
+ </div>
+ <div class="progress"><span id="progress"></span></div>
+ <div class="row"><span id="progressText" class="muted">Hedefe kalan: 150 soru</span><span id="saved" class="muted">Cihaza kaydedilir</span></div>
+</section>
+<section class="panel">
+ <div class="tabs"><button class="tab active" data-exam="TYT">TYT</button><button class="tab" data-exam="AYT">AYT</button></div>
+ <div class="row" style="margin-bottom:12px"><h2 style="margin:0">Ders soru girişi</h2><span class="muted" id="examTotal">TYT toplamı: 0</span></div>
+ <div id="subjects" class="subject-list"></div>
+ <p class="muted" style="margin-bottom:0">Net hesabı: doğru − (yanlış ÷ 4). Boş bırakılan soruları doğru/yanlış alanlarına ekleme.</p>
+</section>
+<section class="panel">
+ <h2>Haftalık özet</h2>
+ <div class="row" style="margin-bottom:12px"><span class="muted" id="weekRange">Bu hafta</span><strong id="weekTotal" class="green">0 soru</strong></div>
+ <div class="week-grid" id="weekGrid"></div>
+ <div class="stats" style="margin-top:10px">
+  <div class="stat"><small>Haftalık doğru</small><strong id="weekCorrect" class="green">0</strong></div>
+  <div class="stat"><small>Haftalık yanlış</small><strong id="weekWrong" class="red">0</strong></div>
+  <div class="stat"><small>Haftalık net</small><strong id="weekNet" class="green">0,00</strong></div>
+  <div class="stat"><small>Çalışılan gün</small><strong id="weekDays">0/7</strong></div>
+ </div>
+</section>
+<section class="panel">
+ <div class="row" style="margin-bottom:12px"><h2 style="margin:0">Geçmiş günler</h2><span class="muted" id="historyCount">0 kayıt</span></div>
+ <div id="history" class="history-list"></div>
+ <div class="actions" style="margin-top:12px">
+  <button id="export" class="secondary">Verileri dışa aktar</button>
+  <button id="importBtn" class="secondary">Yedekten içe aktar</button>
+  <input id="importFile" type="file" accept="application/json,.json" hidden>
+ </div>
+ <p class="muted">Telefonu sıfırlarsan veya tarayıcı verilerini silersen kayıtlar kaybolabilir. Ara sıra yedek indir.</p>
+</section>
+<section class="panel">
+ <h2>Günlük işlemler</h2>
+ <div class="actions"><button id="save" class="primary">Bugünü kaydet</button><button id="clear" class="danger">Bu günü temizle</button></div>
+ <p class="muted" style="margin-bottom:0">Veriler internet üzerinden gönderilmez; bu tarayıcıdaki cihaz hafızasında saklanır.</p>
+</section>
+</main>
+<footer>Soru Takip · Ücretsiz · Çevrimdışı kullanıma uygun</footer>
+<script>
+const $=id=>document.getElementById(id);
+const TODAY=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const lessons={TYT:["Türkçe","Temel Matematik","Geometri","Fizik","Kimya","Biyoloji","Tarih","Coğrafya","Felsefe","Din Kültürü"],AYT:["Matematik","Geometri","Fizik","Kimya","Biyoloji","Türk Dili ve Edebiyatı","Tarih-1","Coğrafya-1","Tarih-2","Coğrafya-2","Felsefe Grubu","Din Kültürü"]};
+const KEY='soruTakipYKS_v1';let db={};let exam='TYT';let current={};
+function blank(){return {goal:150,TYT:{},AYT:{}}}
+function readDB(){try{db=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){db={}}}
+function writeDB(){try{localStorage.setItem(KEY,JSON.stringify(db));$('saved').textContent='✓ Cihaza kaydedildi'}catch(e){$('saved').textContent='Kayıt yapılamadı'}}
+function getDay(date=$('date').value){if(!db[date])db[date]=blank();return db[date]}
+function getLesson(day,ex,name){if(!day[ex][name])day[ex][name]={solved:0,correct:0,wrong:0};return day[ex][name]}
+function num(v){return Math.max(0,Math.floor(Number(v)||0))}
+function net(x){return (num(x.correct)-num(x.wrong)/4)}
+function all(day,ex=null){let sums={solved:0,correct:0,wrong:0,net:0};for(const e of (ex?[ex]:['TYT','AYT']))for(const n of lessons[e]){const x=getLesson(day,e,n);sums.solved+=num(x.solved);sums.correct+=num(x.correct);sums.wrong+=num(x.wrong);sums.net+=net(x)}return sums}
+function fmt(n){return n.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function renderSubjects(){
+ const day=getDay();$('subjects').innerHTML='';
+ lessons[exam].forEach(name=>{const x=getLesson(day,exam,name);const el=document.createElement('div');el.className='subject';el.innerHTML=`<div class="subject-head"><h3>${name}</h3><span class="subject-net">Net: ${fmt(net(x))}</span></div><div class="inputs"><div><label>Çözülen</label><input inputmode="numeric" type="number" min="0" data-name="${name}" data-key="solved" value="${num(x.solved)}"></div><div><label>Doğru</label><input inputmode="numeric" type="number" min="0" data-name="${name}" data-key="correct" value="${num(x.correct)}"></div><div><label>Yanlış</label><input inputmode="numeric" type="number" min="0" data-name="${name}" data-key="wrong" value="${num(x.wrong)}"></div></div>`;$('subjects').appendChild(el)});
+ $('subjects').querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{const x=getLesson(getDay(),exam,inp.dataset.name);x[inp.dataset.key]=num(inp.value);renderTop();inp.closest('.subject').querySelector('.subject-net').textContent='Net: '+fmt(net(x));writeDB();renderWeekly();renderHistory()}));
+}
+function renderTop(){const day=getDay();day.goal=num($('goal').value);const s=all(day);const es=all(day,exam);$('total').textContent=s.solved;$('net').textContent=fmt(s.net);$('correct').textContent=s.correct;$('wrong').textContent=s.wrong;$('examTotal').textContent=exam+' toplamı: '+es.solved+' soru · '+fmt(es.net)+' net';const g=day.goal;$('progress').style.width=(g?Math.min(100,s.solved/g*100):0)+'%';$('progressText').textContent=g?(s.solved>=g?'🎉 Günlük hedef tamamlandı!':'Hedefe kalan: '+Math.max(0,g-s.solved)+' soru · '+Math.floor(s.solved/g*100)+'%'):'Hedef belirlenmedi';}
+function startWeek(dateStr){const d=new Date(dateStr+'T12:00:00');const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d}
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function renderWeekly(){const start=startWeek($('date').value);const labels=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];let sums={solved:0,correct:0,wrong:0,net:0},active=0,html='';let end=new Date(start);end.setDate(start.getDate()+6);$('weekRange').textContent=start.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+' – '+end.toLocaleDateString('tr-TR',{day:'numeric',month:'short'});for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=dateKey(d),day=db[k],s=day?all(day):{solved:0,correct:0,wrong:0,net:0};sums.solved+=s.solved;sums.correct+=s.correct;sums.wrong+=s.wrong;sums.net+=s.net;if(s.solved>0)active++;html+=`<div class="week-day"><small>${labels[i]}</small><strong>${s.solved}</strong></div>`}$('weekGrid').innerHTML=html;$('weekTotal').textContent=sums.solved+' soru';$('weekCorrect').textContent=sums.correct;$('weekWrong').textContent=sums.wrong;$('weekNet').textContent=fmt(sums.net);$('weekDays').textContent=active+'/7'}
+function renderHistory(){const dates=Object.keys(db).filter(k=>db[k]&&all(db[k]).solved>0).sort((a,b)=>b.localeCompare(a));$('historyCount').textContent=dates.length+' kayıt';if(!dates.length){$('history').innerHTML='<div class="empty">Henüz kaydedilmiş soru günü yok.</div>';return}$('history').innerHTML=dates.slice(0,60).map(k=>{const s=all(db[k]);const d=new Date(k+'T12:00:00').toLocaleDateString('tr-TR',{weekday:'short',day:'numeric',month:'short'});return `<div class="history-item"><div class="row"><span class="date">${d}</span><span class="pill">${s.solved} soru</span></div><div class="muted" style="margin-top:7px">Doğru ${s.correct} · Yanlış ${s.wrong} · Net ${fmt(s.net)}</div><button class="secondary load-day" data-date="${k}" style="width:100%;margin-top:10px;padding:9px">Bu günü aç</button></div>`}).join('');$('history').querySelectorAll('.load-day').forEach(b=>b.onclick=()=>loadDate(b.dataset.date))}
+function loadDate(date){$('date').value=date;const d=getDay(date);$('goal').value=d.goal??150;renderSubjects();renderTop();renderWeekly();renderHistory();window.scrollTo({top:0,behavior:'smooth'})}
+$('date').value=TODAY();readDB();if(!db[TODAY()])db[TODAY()]=blank();$('goal').value=db[TODAY()].goal??150;
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{exam=b.dataset.exam;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));renderSubjects();renderTop()}));
+$('date').addEventListener('change',()=>loadDate($('date').value||TODAY()));$('goal').addEventListener('input',()=>{getDay().goal=num($('goal').value);renderTop();writeDB()});
+$('save').onclick=()=>{getDay().goal=num($('goal').value);writeDB();renderTop();renderWeekly();renderHistory();$('saved').textContent='✓ Gün kaydedildi'};
+$('clear').onclick=()=>{if(confirm('Bu tarihin TYT ve AYT kayıtları temizlensin mi?')){db[$('date').value]=blank();$('goal').value=150;writeDB();renderSubjects();renderTop();renderWeekly();renderHistory()}};
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify({app:'Soru Takip',version:1,days:db},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='soru-takip-yedek-'+TODAY()+'.json';a.click();URL.revokeObjectURL(a.href)};
+$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());const incoming=obj.days||obj;if(!confirm('Yedek mevcut kayıtların üzerine yazılabilir. Devam edilsin mi?'))return;db={...db,...incoming};writeDB();loadDate($('date').value);alert('Yedek içe aktarıldı.')}catch(err){alert('Dosya okunamadı. Geçerli soru takip yedeğini seç.')}e.target.value=''};
+renderSubjects();renderTop();renderWeekly();renderHistory();writeDB();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
